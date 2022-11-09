@@ -36,7 +36,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 w-screen z-50 p-3 px-4 md:p-6 md:px-16">
+      <header className="fixed top-0 left-0 right-0 w-full z-50 p-3 px-4 md:p-6 md:px-16">
         {/* Desktop */}
         <div className="hidden md:flex w-full h-full items-center justify-between">
           <Link to={"/"} className="flex items-center gap-2">
@@ -50,16 +50,16 @@ const Header = () => {
               exit={{ opacity: 0, x: 200 }}
               className="flex items-center gap-8"
             >
-              <li className="text-lg text-slate-900 font-semibold hover:text-orange-500 transitions-all duration-300 ease-in-out cursor-pointer">
+              <li onClick={() => setIsOpen(false)} className="text-lg text-slate-900 font-semibold hover:text-orange-500 transitions-all duration-300 ease-in-out cursor-pointer">
                 Home
               </li>
-              <li className="text-lg text-slate-900 font-semibold hover:text-orange-500 transitions-all duration-300 ease-in-out cursor-pointer">
+              <li onClick={() => setIsOpen(false)} className="text-lg text-slate-900 font-semibold hover:text-orange-500 transitions-all duration-300 ease-in-out cursor-pointer">
                 Menu
               </li>
-              <li className="text-lg text-slate-900 font-semibold hover:text-orange-500 transitions-all duration-300 ease-in-out cursor-pointer">
+              <li onClick={() => setIsOpen(false)} className="text-lg text-slate-900 font-semibold hover:text-orange-500 transitions-all duration-300 ease-in-out cursor-pointer">
                 About Us
               </li>
-              <li className="text-lg text-slate-900 font-semibold hover:text-orange-500 transitions-all duration-300 ease-in-out cursor-pointer">
+              <li onClick={() => setIsOpen(false)} className="text-lg text-slate-900 font-semibold hover:text-orange-500 transitions-all duration-300 ease-in-out cursor-pointer">
                 Service
               </li>
             </motion.ul>
@@ -85,7 +85,7 @@ const Header = () => {
                   className={`w-40 bg-primary shadow-xl rounded-lg absolute flex flex-col px-4 py-2 top-12 right-0`}
                 >
                   <Link to={"/createItem"}>
-                    <p className="flex items-center  py-2 gap-3 justify-around hover:text-orange-500 transition-all duration-300 cursor-pointer text-base font-semibold text-slate-900">
+                    <p onClick={() => setIsOpen(false)} className="flex items-center  py-2 gap-3 justify-around hover:text-orange-500 transition-all duration-300 cursor-pointer text-base font-semibold text-slate-900">
                       New Item <FcShop className="icon-style" />
                     </p>
                   </Link>
