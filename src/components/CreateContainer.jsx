@@ -8,6 +8,8 @@ import {
   MdFoodBank,
 } from "react-icons/md";
 import { categories } from "../utils/data";
+import { ref, uploadBytesResumable, getDownloadURL,deleteObject } from "firebase/storage";
+import { storage } from "../firebase.config";
 import Loader from "./Loader";
 const CreateContainer = () => {
   const [title, setTitle] = useState("");
@@ -20,8 +22,55 @@ const CreateContainer = () => {
   const [msg, setMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const upLoadImage = () => {};
-  const deleteImage = () => {};
+  const upLoadImage = (e) => {
+    setIsLoading(true);
+    const imgFile = e.target.files[0];
+    const storageRef = ref(storage, `Images/${Date.now()}-${imgFile.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, imgFile);
+    uploadTask.on(
+      "state_change",
+      (snapshot) => {
+        const uploadProgress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      },
+      (error) => {
+        console.log(error);
+        setField(true);
+        setMsg("Error while uploading : Try Again");
+        setAlertStatus("danger");
+        setTimeout(() => {
+          setField(false);
+          setIsLoading(false);
+        }, 3000);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageAsset(downloadURL);
+          setIsLoading(false);
+          setField(true);
+          setMsg("Image uploaded successfully");
+          setAlertStatus("success");
+          setTimeout(() => {
+            setField(false);
+          }, 3000);
+        });
+      }
+    );
+  };
+  const deleteImage = () => {
+    setIsLoading(true)
+    const deleteRef = ref(storage,imageAsset)
+    deleteObject(deleteRef).then(() => {
+      setIsLoading(false)
+      setImageAsset(null)
+      setField(true)
+      setMsg('Image delete successfull')
+      setAlertStatus('success')
+      setTimeout(() => {
+        setField(false)
+      }, 3000);
+    })
+  };
   const saveDetails = () => {};
 
   return (
@@ -36,7 +85,7 @@ const CreateContainer = () => {
               className={`w-full  rounded-lg text-center text-xl font-bold ${
                 alert === "danger"
                   ? "bg-red-400 text-red-900"
-                  : "bg-green-500 text-green-800"
+                  : "bg-green-500 text-yellow-400"
               }`}
             >
               {msg}
@@ -146,7 +195,13 @@ const CreateContainer = () => {
             </div>
           </div>
           <div className="flex item-center w-full">
-            <button type="button" className="ml-0 md:ml-auto w-full md:w-auto border-none outline-none bg-emerald-500 px-12 py-2 rounded-lg text-lg text-slate-200 font-bold" onClick={saveDetails}>Save </button>
+            <button
+              type="button"
+              className="m-auto md:ml-auto w-full md:w-auto border-none outline-none bg-emerald-500 px-12 py-2 rounded-lg text-lg text-slate-200 font-bold"
+              onClick={saveDetails}
+            >
+              Save{" "}
+            </button>
           </div>
         </div>
       </div>
