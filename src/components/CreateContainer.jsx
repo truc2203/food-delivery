@@ -11,6 +11,7 @@ import { categories } from "../utils/data";
 import { ref, uploadBytesResumable, getDownloadURL,deleteObject } from "firebase/storage";
 import { storage } from "../firebase.config";
 import Loader from "./Loader";
+import { saveItem } from "../utils/firebaseFn";
 const CreateContainer = () => {
   const [title, setTitle] = useState("");
   const [calories, setCalories] = useState("");
@@ -71,7 +72,57 @@ const CreateContainer = () => {
       }, 3000);
     })
   };
-  const saveDetails = () => {};
+  const saveDetails = () => {
+    setIsLoading(true)
+    try {
+      if((!title || !calories || !imageAsset || !price || !category)){
+        setField(true);
+        setMsg("Required is can't be empty");
+        setAlertStatus("danger");
+        setTimeout(() => {
+          setField(false);
+          setIsLoading(false);
+        }, 3000);
+      }
+      else{
+        const data = {
+          id : `${Date.now()}`,
+          title : title,
+          imageURL : imageAsset,
+          category : category,
+          calories : calories,
+          qty : 1,
+          price : price
+        }
+        saveItem(data)
+        setIsLoading(false)
+        setImageAsset(null)
+        setField(true)
+        clearData()
+        setMsg('Data update successfull')
+        setAlertStatus('success')
+        setTimeout(() => {
+          setField(false)
+        }, 3000);
+      }
+    } catch (error) {
+      console.log(error);
+        setField(true);
+        setMsg("Error while uploading : Try Again");
+        setAlertStatus("danger");
+        setTimeout(() => {
+          setField(false);
+          setIsLoading(false);
+        }, 3000);
+    }
+  };
+
+  const clearData = () => {
+    setTitle('')
+    setImageAsset(null)
+    setPrice('')
+    setCalories('')
+  }
 
   return (
     <>
